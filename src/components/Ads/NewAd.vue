@@ -58,8 +58,11 @@
            <v-btn
             class="success"
             @click="createAd"
-            :disabled="!valid"
-          >Create ad</v-btn>
+            :disabled="!valid || loading"
+            :loading="loading"
+          >
+            Create ad
+          </v-btn>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -68,8 +71,8 @@
 </template>
 
 <script>
-export default {
 
+export default {
   data () {
     return {
       title: '',
@@ -78,19 +81,30 @@ export default {
       valid: false
     }
   },
+  computed: {
+    loading () {
+      return this.$store.getters.loading
+    }
+  },
   methods: {
     createAd() {
       if(this.$refs.form.validate()) {
         const ad = {
           title: this.title,
-          discription: this.description,
+          description: this.description,
           promo: this.promo,
           src: 'https://images.unsplash.com/photo-1533907650686-70576141c030?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
         }
 
         this.$store.dispatch('createAd', ad)
+          .then(() => {
+            this.$router.push('/list')
+          })
+          .catch(() => {})
       }
     }
   }
+  
 }
+
 </script>

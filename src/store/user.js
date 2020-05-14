@@ -44,6 +44,7 @@ export default {
       commit('setLoading', true)
       try {
         const user = await fb.auth().signInWithEmailAndPassword(email, password)
+        
 
         commit('setUser', new User(user.uid))
         commit('setLoading', false)
