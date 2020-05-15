@@ -50,14 +50,7 @@
             <v-btn text :to="'/ad/' + ad.id">
               Open
             </v-btn>
-
-            <v-btn
-              raised
-              class="blue accent-3"
-              dark
-            >
-              Buy
-            </v-btn>
+           <app-buy-modal :ad="ad"></app-buy-modal>  
           </v-card-actions>
         </v-card>
         </v-col>

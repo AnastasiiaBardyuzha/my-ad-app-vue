@@ -21,6 +21,12 @@ export default {
       },
       loadAds (state, payload) {
         state.ads = payload
+      },
+      udateAd (state, { title, description, id }) {
+        const ad = state.ads.find(a => a.id === id);
+
+        ad.title = title
+        ad.description = description
       }
     },
     actions: {
@@ -85,6 +91,31 @@ export default {
           commit('setLoading', false)
           throw error
         }
+      },
+      async udateAd ({ commit }, { title, description, id }) {
+        commit('clearError')
+        commit('setLoading', true)
+
+        try {
+          console.log(title,
+            description, id)
+
+          await fb.database().ref('ads').child(id).udate({
+            title,
+            description
+          })
+          commit ('udateAd', {
+            title,
+            description,
+            id
+          })
+          commit('setLoading', false)
+        }
+        catch (error) {
+          commit('setError', error.massege)
+          commit('setLoading', false)
+          throw error
+        }
       }
     },
     getters: {
@@ -94,8 +125,8 @@ export default {
       promoAds (state) {
         return state.ads.filter(ad => ad.promo)
       },
-      myAds (state) {
-        return state.ads
+      myAds (state, getters) {
+        return state.ads.filter(ad => ad.ownerId === getters.user.id)
       },
       adById (state) {
         return adId => {
